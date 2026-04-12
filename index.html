@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SkinProtocol — Ingredient Intelligence for Your Skin</title>
   <meta name="description" content="A skincare scanner built for Indian, Korean and Gulf brands. Transparent safety scores. No alarmism. No billing traps. Join the waitlist for our 2026 launch." />
@@ -10,560 +10,270 @@
   <meta property="og:description" content="Finally. A skincare scanner built for your skin. Indian, Korean and Gulf brands. Launching 2026." />
   <meta property="og:type" content="website" />
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            headline: ["Space Grotesk", "monospace"],
+            body:     ["Space Grotesk", "monospace"],
+            label:    ["Space Grotesk", "monospace"],
+          },
+        },
+      },
+    };
+  </script>
+
   <!-- Convex Client -->
   <script src="https://unpkg.com/convex@1.17.4/dist/browser.bundle.js"></script>
 
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #0A0A0A;
-      --surface: #141414;
-      --border: #2A2A2A;
-      --text: #F5F0E8;
-      --muted: #888888;
-      --dim: #555555;
-      --success: #4CAF50;
-      --font: 'Courier New', Courier, monospace;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 14px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
+      background-color: #0A0A0A;
+      color: #F5F0E8;
+      font-family: 'Space Grotesk', monospace;
     }
-
-    .page {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 20px;
+    .section-border {
+      border-bottom: 1px solid #2A2A2A;
     }
-
-    /* ─── SECTION SEPARATOR ─── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 0;
+    input::placeholder {
+      color: #555555;
     }
-
-    /* ─── SECTION WRAPPER ─── */
-    .section {
-      padding: 60px 0;
-    }
-
-    /* ─── HEADER ─── */
-    .header {
-      padding: 40px 0 40px;
-      text-align: center;
-    }
-
-    .wordmark {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.35em;
-      color: var(--text);
-      font-family: var(--font);
-      text-transform: uppercase;
-      display: block;
-    }
-
-    .tagline {
-      font-size: 11px;
-      letter-spacing: 0.5em;
-      color: var(--muted);
-      margin-top: 8px;
-      display: block;
-      text-transform: lowercase;
-    }
-
-    /* ─── HERO ─── */
-    .hero {
-      padding: 60px 0;
-    }
-
-    .hero h1 {
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--text);
-      font-family: var(--font);
-      margin-bottom: 20px;
-    }
-
-    .hero p {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    /* ─── LIVE COUNTER ─── */
-    .counter-section {
-      padding: 60px 0;
-      text-align: center;
-    }
-
-    .counter-text {
-      font-size: 12px;
-      color: var(--muted);
-      font-family: var(--font);
-      letter-spacing: 0.05em;
-    }
-
-    .counter-number {
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    /* ─── FORM ─── */
-    .form-section {
-      padding: 60px 0;
-    }
-
-    .waitlist-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .email-input {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 14px;
-      padding: 14px;
-      border-radius: 8px;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    .email-input::placeholder {
-      color: var(--muted);
-    }
-
-    .email-input:focus {
-      border-color: var(--text);
-    }
-
-    .email-input:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .submit-btn {
-      background: var(--text);
-      color: var(--bg);
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 700;
-      padding: 14px;
-      border-radius: 8px;
-      border: none;
-      width: 100%;
-      cursor: pointer;
-      transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
-      letter-spacing: 0.02em;
-    }
-
-    .submit-btn:hover:not(:disabled) {
-      opacity: 0.88;
-    }
-
-    .submit-btn:active:not(:disabled) {
-      opacity: 0.75;
-    }
-
-    .submit-btn:disabled {
-      background: var(--surface);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      cursor: not-allowed;
-    }
-
-    .submit-btn.success {
-      background: var(--surface);
-      color: var(--success);
-      border: 1px solid var(--border);
-      cursor: not-allowed;
-    }
-
-    .form-note {
-      text-align: center;
-      font-size: 11px;
-      color: var(--dim);
-      font-family: var(--font);
-      margin-top: 4px;
-    }
-
-    /* ─── PILLS ─── */
-    .pills-section {
-      padding: 60px 0;
-    }
-
-    .pills-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: flex-start;
-    }
-
-    .pill {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 11px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      white-space: nowrap;
-      letter-spacing: 0.02em;
-    }
-
-    /* ─── PROBLEM SECTION ─── */
-    .problem-section {
-      padding: 60px 0;
-    }
-
-    .section-heading {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
-      font-family: var(--font);
-      margin-bottom: 32px;
-      line-height: 1.3;
-    }
-
-    .cards-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .card-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      font-family: var(--font);
-      margin-bottom: 6px;
-      letter-spacing: 0.01em;
-    }
-
-    .card-body {
-      font-size: 13px;
-      color: var(--muted);
-      font-family: var(--font);
-      line-height: 1.6;
-    }
-
-    /* ─── FEATURES SECTION ─── */
-    .features-section {
-      padding: 60px 0;
-    }
-
-    .feature-rows {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .feature-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .feature-accent {
-      width: 4px;
-      height: 20px;
-      background: var(--text);
-      border-radius: 2px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .feature-text {
-      font-size: 14px;
-      color: var(--text);
-      font-family: var(--font);
-      line-height: 1.5;
-    }
-
-    /* ─── SECOND CTA ─── */
-    .second-cta-section {
-      padding: 60px 0;
-    }
-
-    .cta-heading {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
-      font-family: var(--font);
-      margin-bottom: 32px;
-      line-height: 1.3;
-    }
-
-    /* ─── FOOTER ─── */
-    .footer {
-      padding: 60px 0 40px;
-      text-align: center;
-    }
-
-    .footer-main {
-      font-size: 13px;
-      color: var(--muted);
-      font-family: var(--font);
-      margin-bottom: 8px;
-      letter-spacing: 0.05em;
-    }
-
-    .footer-sub {
-      font-size: 11px;
-      color: var(--dim);
-      font-family: var(--font);
-    }
-
-    /* ─── STATUS MESSAGE ─── */
-    .status-msg {
-      font-size: 12px;
-      text-align: center;
-      min-height: 18px;
-      font-family: var(--font);
-    }
-
-    .status-msg.error {
-      color: #e57373;
-    }
-
-    .status-msg.success {
-      color: var(--success);
-    }
-
-    .status-msg.duplicate {
-      color: var(--muted);
-    }
-
-    /* ─── LOADING STATE ─── */
-    @keyframes pulse {
+    /* Loading pulse for counter */
+    @keyframes pulse-opacity {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
+      50%       { opacity: 0.35; }
     }
+    .loading { animation: pulse-opacity 1.2s ease-in-out infinite; }
 
-    .loading {
-      animation: pulse 1.2s ease-in-out infinite;
+    /* Disabled button states */
+    .btn-success {
+      background-color: #1e1e1e !important;
+      color: #4CAF50 !important;
+      border: 1px solid #2A2A2A;
+      cursor: not-allowed;
+    }
+    .btn-duplicate {
+      background-color: #1e1e1e !important;
+      color: #888888 !important;
+      border: 1px solid #2A2A2A;
+      cursor: not-allowed;
     }
   </style>
 </head>
-<body>
 
-<div class="page">
+<body class="antialiased overflow-x-hidden">
+<main class="max-w-[480px] mx-auto min-h-screen bg-[#0A0A0A]">
 
-  <!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
-  <header class="header" role="banner">
-    <span class="wordmark" aria-label="SkinProtocol">SKINPROTOCOL</span>
-    <span class="tagline">ingredient intelligence</span>
+  <!-- ═══════════════════════ SECTION 1: HEADER ═══════════════════════ -->
+  <header class="flex flex-col items-center pt-12 pb-10 section-border">
+    <h1 class="text-lg font-bold tracking-[0.35em] text-[#F5F0E8] leading-none">SKINPROTOCOL</h1>
+    <p class="text-[11px] tracking-[0.5em] text-[#888888] uppercase mt-3">ingredient intelligence</p>
   </header>
 
-  <hr class="divider" />
-
-  <!-- ════════════════════════════════ HERO ════════════════════════════════ -->
-  <section class="hero section" aria-labelledby="hero-heading">
-    <h1 id="hero-heading">Finally. A skincare scanner built for your skin.</h1>
-    <p>Indian, Korean and Gulf brands. Transparent safety scores. No alarmism. No billing traps. Launching 2026.</p>
+  <!-- ═══════════════════════ SECTION 2: HERO ═════════════════════════ -->
+  <section class="flex flex-col items-center text-center px-6 py-[60px] section-border">
+    <span class="text-[10px] uppercase tracking-widest text-[#555555] mb-4">Protocol V.01</span>
+    <h2 class="text-[28px] font-bold text-[#F5F0E8] leading-[1.3] max-w-[380px]">
+      Finally. A skincare scanner built for your skin.
+    </h2>
+    <p class="text-sm leading-[1.6] text-[#888888] mt-6 px-4">
+      Indian, Korean and Gulf brands. Transparent safety scores. No alarmism. No billing traps. Launching 2026.
+    </p>
   </section>
 
-  <hr class="divider" />
+  <!-- ═══════════════════ SECTION 3: COUNTER + FORM 1 ═════════════════ -->
+  <section class="px-6 py-[60px] section-border">
+    <div class="flex flex-col items-center gap-6">
 
-  <!-- ══════════════════════════ LIVE COUNTER ══════════════════════════════ -->
-  <section class="counter-section section" aria-live="polite" aria-label="Waitlist count">
-    <p class="counter-text loading" id="counter-text">— people already waiting</p>
-  </section>
+      <!-- Live Counter -->
+      <p class="text-[12px] text-[#888888] tracking-[0.05em] loading" id="counter-text" aria-live="polite">
+        — people already waiting
+      </p>
 
-  <hr class="divider" />
+      <!-- Form 1 -->
+      <form id="form1" class="w-full flex flex-col gap-3" novalidate aria-label="Join the waitlist">
+        <label for="email1" class="sr-only">Email address</label>
+        <input
+          id="email1"
+          type="email"
+          autocomplete="email"
+          required
+          placeholder="Enter your email"
+          class="w-full bg-[#141414] border border-[#2A2A2A] text-[#F5F0E8] text-sm py-[14px] px-4 rounded-lg focus:border-[#F5F0E8] focus:ring-0 outline-none transition-colors"
+        />
+        <button
+          id="btn1"
+          type="submit"
+          class="w-full bg-[#F5F0E8] text-[#0A0A0A] font-bold text-sm py-[14px] rounded-lg active:opacity-70 transition-opacity"
+        >
+          Join the waitlist
+        </button>
+        <div id="status1" class="text-[11px] text-center min-h-[16px]" role="status" aria-live="polite"></div>
+        <p class="text-[11px] text-[#555555] text-center mt-2">No spam. Just a launch notification.</p>
+      </form>
 
-  <!-- ═══════════════════════════ WAITLIST FORM 1 ══════════════════════════ -->
-  <section class="form-section section" aria-labelledby="form1-label">
-    <form class="waitlist-form" id="form1" aria-label="Join the waitlist" novalidate>
-      <label for="email1" id="form1-label" class="sr-only">Email address</label>
-      <input
-        type="email"
-        id="email1"
-        class="email-input"
-        placeholder="Enter your email"
-        autocomplete="email"
-        required
-        aria-required="true"
-      />
-      <button type="submit" id="btn1" class="submit-btn">Join the waitlist</button>
-      <div class="status-msg" id="status1" role="status" aria-live="polite"></div>
-      <p class="form-note">No spam. Just a launch notification.</p>
-    </form>
-  </section>
-
-  <hr class="divider" />
-
-  <!-- ══════════════════════════ SOCIAL PROOF PILLS ═════════════════════════ -->
-  <section class="pills-section section" aria-label="Key stats">
-    <div class="pills-row" role="list">
-      <span class="pill" role="listitem">500M+ underserved users</span>
-      <span class="pill" role="listitem">70%+ scan fail rate</span>
-      <span class="pill" role="listitem">$0 billing tricks</span>
     </div>
   </section>
 
-  <hr class="divider" />
-
-  <!-- ══════════════════════════ PROBLEM SECTION ═══════════════════════════ -->
-  <section class="problem-section section" aria-labelledby="problem-heading">
-    <h2 id="problem-heading" class="section-heading">Your skincare app doesn't know you exist.</h2>
-    <div class="cards-stack">
-      <div class="card" role="article">
-        <p class="card-title">Scanned Minimalist. Product not found.</p>
-        <p class="card-body">70% scan failure for Indian and Asian brands.</p>
+  <!-- ══════════════════ SECTION 4: SOCIAL PROOF PILLS ════════════════ -->
+  <section class="px-6 py-[60px] section-border" aria-label="Key stats">
+    <div class="flex flex-wrap justify-center gap-2" role="list">
+      <div role="listitem" class="bg-[#141414] border border-[#2A2A2A] text-[#F5F0E8] text-[11px] py-1.5 px-3.5 rounded-full whitespace-nowrap">
+        500M+ underserved users
       </div>
-      <div class="card" role="article">
-        <p class="card-title">Mystery scores. Zero sources.</p>
-        <p class="card-body">No explanation for why an ingredient is flagged.</p>
+      <div role="listitem" class="bg-[#141414] border border-[#2A2A2A] text-[#F5F0E8] text-[11px] py-1.5 px-3.5 rounded-full whitespace-nowrap">
+        70%+ scan fail rate
       </div>
-      <div class="card" role="article">
-        <p class="card-title">Can't find the cancel button.</p>
-        <p class="card-body">OnSkin charges $6.99 a week and hides the exit.</p>
+      <div role="listitem" class="bg-[#141414] border border-[#2A2A2A] text-[#F5F0E8] text-[11px] py-1.5 px-3.5 rounded-full whitespace-nowrap">
+        $0 billing tricks
       </div>
     </div>
   </section>
 
-  <hr class="divider" />
+  <!-- ══════════════════════ SECTION 5: PROBLEM ═══════════════════════ -->
+  <section class="px-6 py-[60px] section-border" aria-labelledby="problem-heading">
+    <h3 id="problem-heading" class="text-xl font-bold text-[#F5F0E8] mb-8">
+      Your skincare app doesn't know you exist.
+    </h3>
+    <div class="flex flex-col gap-3">
 
-  <!-- ══════════════════════════ FEATURES SECTION ══════════════════════════ -->
-  <section class="features-section section" aria-labelledby="features-heading">
-    <h2 id="features-heading" class="section-heading">Built different. From the ground up.</h2>
-    <div class="feature-rows">
-      <div class="feature-row">
-        <div class="feature-accent" aria-hidden="true"></div>
-        <span class="feature-text">500+ Indian and Asian brands at launch</span>
-      </div>
-      <div class="feature-row">
-        <div class="feature-accent" aria-hidden="true"></div>
-        <span class="feature-text">Every flagged ingredient shows its source</span>
-      </div>
-      <div class="feature-row">
-        <div class="feature-accent" aria-hidden="true"></div>
-        <span class="feature-text">Melanin-aware skin profile scoring</span>
-      </div>
-      <div class="feature-row">
-        <div class="feature-accent" aria-hidden="true"></div>
-        <span class="feature-text">Cancel anytime. Always visible. Always 2 taps.</span>
-      </div>
+      <article class="bg-[#141414] border border-[#2A2A2A] p-4 rounded-xl">
+        <h4 class="text-sm font-bold text-[#F5F0E8] mb-1">Scanned Minimalist. Product not found.</h4>
+        <p class="text-[13px] leading-[1.5] text-[#888888]">70% scan failure for Indian and Asian brands.</p>
+      </article>
+
+      <article class="bg-[#141414] border border-[#2A2A2A] p-4 rounded-xl">
+        <h4 class="text-sm font-bold text-[#F5F0E8] mb-1">Mystery scores. Zero sources.</h4>
+        <p class="text-[13px] leading-[1.5] text-[#888888]">No explanation for why an ingredient is flagged.</p>
+      </article>
+
+      <article class="bg-[#141414] border border-[#2A2A2A] p-4 rounded-xl">
+        <h4 class="text-sm font-bold text-[#F5F0E8] mb-1">Can't find the cancel button.</h4>
+        <p class="text-[13px] leading-[1.5] text-[#888888]">OnSkin charges $6.99 a week and hides the exit.</p>
+      </article>
+
     </div>
   </section>
 
-  <hr class="divider" />
+  <!-- ══════════════════════ SECTION 6: FEATURES ══════════════════════ -->
+  <section class="px-6 py-[60px] section-border" aria-labelledby="features-heading">
+    <h3 id="features-heading" class="text-xl font-bold text-[#F5F0E8] mb-8">
+      Built different. From the ground up.
+    </h3>
+    <div class="flex flex-col gap-6">
 
-  <!-- ══════════════════════════ SECOND CTA SECTION ════════════════════════ -->
-  <section class="second-cta-section section" aria-labelledby="cta-heading">
-    <h2 id="cta-heading" class="cta-heading">Be first to know when we launch.</h2>
-    <form class="waitlist-form" id="form2" aria-label="Join the waitlist second form" novalidate>
-      <label for="email2" class="sr-only">Email address</label>
-      <input
-        type="email"
-        id="email2"
-        class="email-input"
-        placeholder="Enter your email"
-        autocomplete="email"
-        required
-        aria-required="true"
-      />
-      <button type="submit" id="btn2" class="submit-btn">Join the waitlist</button>
-      <div class="status-msg" id="status2" role="status" aria-live="polite"></div>
-      <p class="form-note">No spam. Just a launch notification.</p>
-    </form>
+      <div class="flex items-center gap-[14px]">
+        <div class="w-1 h-6 bg-[#F5F0E8] flex-shrink-0" aria-hidden="true"></div>
+        <p class="text-sm leading-[1.4] text-[#F5F0E8]">500+ Indian and Asian brands at launch</p>
+      </div>
+
+      <div class="flex items-center gap-[14px]">
+        <div class="w-1 h-6 bg-[#F5F0E8] flex-shrink-0" aria-hidden="true"></div>
+        <p class="text-sm leading-[1.4] text-[#F5F0E8]">Every flagged ingredient shows its source</p>
+      </div>
+
+      <div class="flex items-center gap-[14px]">
+        <div class="w-1 h-6 bg-[#F5F0E8] flex-shrink-0" aria-hidden="true"></div>
+        <p class="text-sm leading-[1.4] text-[#F5F0E8]">Melanin-aware skin profile scoring</p>
+      </div>
+
+      <div class="flex items-center gap-[14px]">
+        <div class="w-1 h-6 bg-[#F5F0E8] flex-shrink-0" aria-hidden="true"></div>
+        <p class="text-sm leading-[1.4] text-[#F5F0E8]">Cancel anytime. Always visible. Always 2 taps.</p>
+      </div>
+
+    </div>
   </section>
 
-  <hr class="divider" />
+  <!-- ════════════════════ SECTION 7: SECOND CTA ══════════════════════ -->
+  <section class="px-6 py-[60px] section-border" aria-labelledby="cta-heading">
+    <div class="flex flex-col items-center gap-8">
+      <h3 id="cta-heading" class="text-xl font-bold text-[#F5F0E8] text-center leading-snug">
+        Be first to know when we launch.
+      </h3>
 
-  <!-- ════════════════════════════ FOOTER ══════════════════════════════════ -->
-  <footer class="footer" role="contentinfo">
-    <p class="footer-main">SkinProtocol — 2026</p>
-    <p class="footer-sub">Built for the 500 million skincare users apps forgot.</p>
+      <form id="form2" class="w-full flex flex-col gap-3" novalidate aria-label="Join the waitlist second form">
+        <label for="email2" class="sr-only">Email address</label>
+        <input
+          id="email2"
+          type="email"
+          autocomplete="email"
+          required
+          placeholder="Enter your email"
+          class="w-full bg-[#141414] border border-[#2A2A2A] text-[#F5F0E8] text-sm py-[14px] px-4 rounded-lg focus:border-[#F5F0E8] focus:ring-0 outline-none transition-colors"
+        />
+        <button
+          id="btn2"
+          type="submit"
+          class="w-full bg-[#F5F0E8] text-[#0A0A0A] font-bold text-sm py-[14px] rounded-lg active:opacity-70 transition-opacity"
+        >
+          Join the waitlist
+        </button>
+        <div id="status2" class="text-[11px] text-center min-h-[16px]" role="status" aria-live="polite"></div>
+        <p class="text-[11px] text-[#555555] text-center mt-2">No spam. Just a launch notification.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ SECTION 8: FOOTER ═══════════════════════ -->
+  <footer class="flex flex-col items-center px-6 pt-[60px] pb-12 text-center" role="contentinfo">
+    <p class="text-[12px] text-[#888888] tracking-wider mb-2">SkinProtocol — 2026</p>
+    <p class="text-[11px] text-[#555555] max-w-[280px]">Built for the 500 million skincare users apps forgot.</p>
   </footer>
 
-</div>
+</main>
 
-<!-- ═══════════════════════════ SCREEN READER ONLY ═══════════════════════════ -->
+<!-- Screen-reader utility -->
 <style>
   .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
   }
 </style>
 
 <script>
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
   // CONFIGURATION
-  // Replace CONVEX_URL with your Convex deployment URL after running:
+  // Replace with your Convex deployment URL after running:
   //   npx convex dev
-  // It looks like: https://your-deployment-name.convex.cloud
-  // ═══════════════════════════════════════════════════════════════
-  const CONVEX_URL = window.CONVEX_URL || "https://YOUR_DEPLOYMENT.convex.cloud";
+  // ═══════════════════════════════════════════════════
+  const CONVEX_URL = window.CONVEX_URL || "https://neighborly-magpie-647.convex.cloud";
 
-  // ═══════════════════════════════════════════════════════════════
-  // SOURCE TRACKING — read ?source= from URL
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
+  // SOURCE TRACKING — reads ?source= from URL
+  // ═══════════════════════════════════════════════════
   function getSource() {
     try {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("source") || "direct";
+      return new URLSearchParams(window.location.search).get("source") || "direct";
     } catch (e) {
       return "direct";
     }
   }
-
   const SOURCE = getSource();
 
-  // ═══════════════════════════════════════════════════════════════
-  // CONVEX CLIENT SETUP
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
+  // CONVEX INIT
+  // ═══════════════════════════════════════════════════
   let convexClient = null;
-  let convexReady = false;
+  let convexReady  = false;
 
   function initConvex() {
     if (!window.ConvexClient) {
-      console.warn("Convex SDK not loaded. Running in demo mode.");
+      console.warn("Convex SDK not loaded — running in demo mode.");
       setCounterFallback();
       return;
     }
-
     try {
       convexClient = new window.ConvexClient(CONVEX_URL);
-      convexReady = true;
-
-      // Subscribe to live count
+      convexReady  = true;
       subscribeToCount();
     } catch (err) {
       console.warn("Convex init failed:", err.message);
@@ -571,111 +281,78 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
   // LIVE COUNT SUBSCRIPTION
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
   function subscribeToCount() {
     if (!convexReady || !convexClient) return;
-
     convexClient.onUpdate(
       { path: "waitlist:getCount", args: {} },
-      (count) => {
-        updateCounterDisplay(count);
-      }
+      (count) => updateCounterDisplay(count)
     );
   }
 
   function updateCounterDisplay(count) {
     const el = document.getElementById("counter-text");
-    if (el) {
-      el.classList.remove("loading");
-      el.innerHTML = `<span class="counter-number">${count.toLocaleString()}</span> people already waiting`;
-    }
+    if (!el) return;
+    el.classList.remove("loading");
+    el.innerHTML = `<span class="font-semibold text-[#F5F0E8]">${count.toLocaleString()}</span> people already waiting`;
   }
 
   function setCounterFallback() {
     const el = document.getElementById("counter-text");
-    if (el) {
-      el.classList.remove("loading");
-      el.textContent = "Be the first to join.";
-    }
+    if (!el) return;
+    el.classList.remove("loading");
+    el.textContent = "Be the first to join.";
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // SHARED FORM STATE — both forms sync together
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
+  // SHARED FORM STATE
+  // ═══════════════════════════════════════════════════
   let formSubmitted = false;
-  let formSubmitState = null; // null | 'success' | 'duplicate'
 
-  function lockAllForms(state, message) {
+  function lockAllForms(btnClass, btnLabel) {
     formSubmitted = true;
-    formSubmitState = state;
-
-    const forms = [
-      { input: "email1", btn: "btn1", status: "status1" },
-      { input: "email2", btn: "btn2", status: "status2" },
-    ];
-
-    forms.forEach(({ input, btn, status }) => {
-      const inputEl = document.getElementById(input);
-      const btnEl = document.getElementById(btn);
-      const statusEl = document.getElementById(status);
-
-      if (inputEl) inputEl.disabled = true;
-
-      if (btnEl) {
-        btnEl.disabled = true;
-        btnEl.textContent = message;
-        if (state === "success") {
-          btnEl.classList.add("success");
-        }
-      }
-
-      if (statusEl) {
-        statusEl.textContent = "";
-      }
+    [
+      { inputId: "email1", btnId: "btn1", statusId: "status1" },
+      { inputId: "email2", btnId: "btn2", statusId: "status2" },
+    ].forEach(({ inputId, btnId, statusId }) => {
+      const inputEl  = document.getElementById(inputId);
+      const btnEl    = document.getElementById(btnId);
+      const statusEl = document.getElementById(statusId);
+      if (inputEl)  { inputEl.disabled = true; }
+      if (btnEl)    { btnEl.disabled = true; btnEl.textContent = btnLabel; btnEl.className = `w-full font-bold text-sm py-[14px] rounded-lg transition-opacity ${btnClass}`; }
+      if (statusEl) { statusEl.textContent = ""; }
     });
   }
 
   function setFormError(formId, message) {
     const statusId = formId === "form1" ? "status1" : "status2";
+    const btnId    = formId === "form1" ? "btn1"    : "btn2";
     const statusEl = document.getElementById(statusId);
-    if (statusEl) {
-      statusEl.textContent = message;
-      statusEl.className = "status-msg error";
-    }
-
-    const btnId = formId === "form1" ? "btn1" : "btn2";
-    const btnEl = document.getElementById(btnId);
-    if (btnEl) {
-      btnEl.disabled = false;
-      btnEl.textContent = "Join the waitlist";
-    }
+    const btnEl    = document.getElementById(btnId);
+    if (statusEl) { statusEl.textContent = message; statusEl.style.color = "#e57373"; }
+    if (btnEl)    { btnEl.disabled = false; btnEl.textContent = "Join the waitlist"; }
   }
 
   function clearFormError(formId) {
     const statusId = formId === "form1" ? "status1" : "status2";
     const statusEl = document.getElementById(statusId);
-    if (statusEl) {
-      statusEl.textContent = "";
-      statusEl.className = "status-msg";
-    }
+    if (statusEl) { statusEl.textContent = ""; statusEl.style.color = ""; }
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
   // FORM SUBMIT HANDLER
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
   async function handleFormSubmit(event, formId) {
     event.preventDefault();
-
     if (formSubmitted) return;
 
-    const emailInputId = formId === "form1" ? "email1" : "email2";
-    const btnId = formId === "form1" ? "btn1" : "btn2";
-    const emailEl = document.getElementById(emailInputId);
-    const btnEl = document.getElementById(btnId);
-
-    const email = emailEl ? emailEl.value.trim() : "";
+    const emailId = formId === "form1" ? "email1" : "email2";
+    const btnId   = formId === "form1" ? "btn1"   : "btn2";
+    const emailEl = document.getElementById(emailId);
+    const btnEl   = document.getElementById(btnId);
+    const email   = emailEl ? emailEl.value.trim() : "";
 
     // Client-side validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -683,57 +360,37 @@
       setFormError(formId, "Please enter a valid email address.");
       return;
     }
-
     clearFormError(formId);
 
     // Loading state
-    if (btnEl) {
-      btnEl.disabled = true;
-      btnEl.textContent = "Joining...";
-    }
+    if (btnEl) { btnEl.disabled = true; btnEl.textContent = "Joining…"; }
 
-    // If Convex isn't connected, simulate success for demo
+    // Demo mode — Convex not configured yet
     if (!convexReady || !convexClient) {
-      await new Promise((r) => setTimeout(r, 800));
-      lockAllForms("success", "You are on the list ✓");
+      await new Promise(r => setTimeout(r, 700));
+      lockAllForms("btn-success", "You are on the list ✓");
       return;
     }
 
     try {
-      const result = await convexClient.mutation("waitlist:joinWaitlist", {
-        email,
-        source: SOURCE,
-      });
-
-      if (result.success) {
-        lockAllForms("success", "You are on the list ✓");
-      } else if (result.duplicate) {
-        lockAllForms("duplicate", "Already registered");
-      } else {
-        setFormError(formId, result.message || "Something went wrong. Please try again.");
-      }
+      const result = await convexClient.mutation("waitlist:joinWaitlist", { email, source: SOURCE });
+      if (result.success)   { lockAllForms("btn-success",   "You are on the list ✓"); }
+      else if (result.duplicate) { lockAllForms("btn-duplicate", "Already registered"); }
+      else { setFormError(formId, result.message || "Something went wrong. Please try again."); }
     } catch (err) {
       console.error("Submission error:", err);
       setFormError(formId, "Connection error. Please try again.");
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // BIND FORMS
-  // ═══════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
+  // BIND FORMS + INIT
+  // ═══════════════════════════════════════════════════
   document.addEventListener("DOMContentLoaded", () => {
     const form1 = document.getElementById("form1");
     const form2 = document.getElementById("form2");
-
-    if (form1) {
-      form1.addEventListener("submit", (e) => handleFormSubmit(e, "form1"));
-    }
-
-    if (form2) {
-      form2.addEventListener("submit", (e) => handleFormSubmit(e, "form2"));
-    }
-
-    // Initialize Convex
+    if (form1) form1.addEventListener("submit", e => handleFormSubmit(e, "form1"));
+    if (form2) form2.addEventListener("submit", e => handleFormSubmit(e, "form2"));
     initConvex();
   });
 </script>
