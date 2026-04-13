@@ -176,7 +176,7 @@ export default function App() {
 
     setFormState('loading')
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMIrlow_tpWqiupfslGOn2q7gVSm-daUmGhDk-HC215BDSIgWaHPhqcLholzDxAOXHKg/exec'
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwY5sJzwNhExYg6ovT7P4O1tvDvrlX_WL-P1pIAkiCLsReh2BJg_MPIuRsSFgDt2yDp6A/exec'
     
     try {
       const response = await fetch(scriptURL, {
