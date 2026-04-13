@@ -176,7 +176,7 @@ export default function App() {
 
     setFormState('loading')
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzxO_ZgflK4T9OK7mUhXb-5Z_alypMVoc4fKthzMdMNGdjVj7I0anrvpQKHzy6l7hQ0Sg/exec'
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxG3_DLw3nZuccbuWmws5QaY-aKGcb8N9XLCn0mzEadh1_eeXt9E_3eCur3cfgZnprHtA/exec'
     
     // Instead of an image ping, we send a standard form-urlencoded POST
     // This correctly populates e.parameter in Google Apps Script and bypasses CORS safely
