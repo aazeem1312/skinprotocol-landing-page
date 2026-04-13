@@ -54,7 +54,7 @@ function WaitlistForm({
   }
 
   const btnLabel = () => {
-    if (formState === 'success') return 'You are on the list ✓'
+    if (formState === 'success') return "You're on the waitlist! 🎉"
     if (formState === 'loading') return 'Joining…'
     return 'Join the waitlist'
   }
@@ -176,9 +176,26 @@ export default function App() {
 
     setFormState('loading')
 
-    // Simulate network request (without a backend)
-    await new Promise(res => setTimeout(res, 1200))
-    setFormState('success')
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMIrlow_tpWqiupfslGOn2q7gVSm-daUmGhDk-HC215BDSIgWaHPhqcLholzDxAOXHKg/exec'
+    
+    try {
+      const response = await fetch(scriptURL, {
+        method: 'POST',
+        // Using text/plain avoids CORS preflight errors with Google Apps Script
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ name: name.trim(), email: email.trim() })
+      })
+
+      if (response.ok) {
+        setFormState('success')
+      } else {
+        throw new Error('Network response was not ok')
+      }
+    } catch (error) {
+      console.error('Error!', error)
+      setErrorMessage('Failed to join the waitlist. Please try again.')
+      setFormState('error')
+    }
   }
 
   const sharedFormProps = {
