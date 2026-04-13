@@ -176,25 +176,16 @@ export default function App() {
 
     setFormState('loading')
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwY5sJzwNhExYg6ovT7P4O1tvDvrlX_WL-P1pIAkiCLsReh2BJg_MPIuRsSFgDt2yDp6A/exec'
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzxO_ZgflK4T9OK7mUhXb-5Z_alypMVoc4fKthzMdMNGdjVj7I0anrvpQKHzy6l7hQ0Sg/exec'
     
-    try {
-      await fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim() })
-      })
+    // Use the Image ping trick to bypass CORS using a GET request
+    const url = `${scriptURL}?name=${encodeURIComponent(name.trim())}&email=${encodeURIComponent(email.trim())}`
+    new Image().src = url
 
-      // With no-cors, the response is opaque so we can't check response.ok
-      // If we made it this far without a network error, we assume success!
+    // Give it a brief moment before showing success to feel natural
+    setTimeout(() => {
       setFormState('success')
-      
-    } catch (error) {
-      console.error('Error!', error)
-      setErrorMessage('Failed to join the waitlist. Please try again.')
-      setFormState('error')
-    }
+    }, 800)
   }
 
   const sharedFormProps = {
