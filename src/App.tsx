@@ -179,18 +179,17 @@ export default function App() {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwY5sJzwNhExYg6ovT7P4O1tvDvrlX_WL-P1pIAkiCLsReh2BJg_MPIuRsSFgDt2yDp6A/exec'
     
     try {
-      const response = await fetch(scriptURL, {
+      await fetch(scriptURL, {
         method: 'POST',
-        // Using text/plain avoids CORS preflight errors with Google Apps Script
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ name: name.trim(), email: email.trim() })
       })
 
-      if (response.ok) {
-        setFormState('success')
-      } else {
-        throw new Error('Network response was not ok')
-      }
+      // With no-cors, the response is opaque so we can't check response.ok
+      // If we made it this far without a network error, we assume success!
+      setFormState('success')
+      
     } catch (error) {
       console.error('Error!', error)
       setErrorMessage('Failed to join the waitlist. Please try again.')
