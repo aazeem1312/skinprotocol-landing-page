@@ -3,6 +3,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   waitlist: defineTable({
+    name: v.string(),
     email: v.string(),
     source: v.string(),
     joinedAt: v.number(),
