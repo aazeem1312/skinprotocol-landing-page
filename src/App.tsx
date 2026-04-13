@@ -180,21 +180,20 @@ export default function App() {
     
     // Instead of an image ping, we send a standard form-urlencoded POST
     // This correctly populates e.parameter in Google Apps Script and bypasses CORS safely
-    const formData = new URLSearchParams()
-    formData.append('name', name.trim())
-    formData.append('email', email.trim())
-
     try {
       await fetch(scriptURL, {
         method: 'POST',
         mode: 'no-cors',
+        cache: 'no-cache',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: formData.toString()
+        body: new URLSearchParams({
+          name: name.trim(),
+          email: email.trim(),
+        }).toString(),
       })
 
-      // We won't be able to read the response due to no-cors, so we assume success
       setFormState('success')
     } catch (err) {
       console.error(err)
