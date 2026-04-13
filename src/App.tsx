@@ -176,25 +176,29 @@ export default function App() {
 
     setFormState('loading')
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbytEAmto7G2C-KLD76N1hcVr8I9U6-tOtUjwafZlnPv1fJl4BWSsPwY2dqYyeBeAm3A5A/exec'
-    
-    // Instead of an image ping, we send a standard form-urlencoded POST
-    // This correctly populates e.parameter in Google Apps Script and bypasses CORS safely
     try {
-      await fetch(scriptURL, {
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        mode: 'no-cors',
-        cache: 'no-cache',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        body: new URLSearchParams({
+        body: JSON.stringify({
+          access_key: '68b80995-17e2-4112-96f4-52483806f3f7',
           name: name.trim(),
           email: email.trim(),
-        }).toString(),
+          subject: 'New SkinProtocol Waitlist Signup',
+        }),
       })
 
-      setFormState('success')
+      const result = await response.json()
+
+      if (result.success) {
+        setFormState('success')
+      } else {
+        setErrorMessage(result.message || 'Something went wrong. Please try again.')
+        setFormState('error')
+      }
     } catch (err) {
       console.error(err)
       setErrorMessage('Network error. Please try again.')
