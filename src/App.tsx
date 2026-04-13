@@ -178,14 +178,29 @@ export default function App() {
 
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzxO_ZgflK4T9OK7mUhXb-5Z_alypMVoc4fKthzMdMNGdjVj7I0anrvpQKHzy6l7hQ0Sg/exec'
     
-    // Use the Image ping trick to bypass CORS using a GET request
-    const url = `${scriptURL}?name=${encodeURIComponent(name.trim())}&email=${encodeURIComponent(email.trim())}`
-    new Image().src = url
+    // Instead of an image ping, we send a standard form-urlencoded POST
+    // This correctly populates e.parameter in Google Apps Script and bypasses CORS safely
+    const formData = new URLSearchParams()
+    formData.append('name', name.trim())
+    formData.append('email', email.trim())
 
-    // Give it a brief moment before showing success to feel natural
-    setTimeout(() => {
+    try {
+      await fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString()
+      })
+
+      // We won't be able to read the response due to no-cors, so we assume success
       setFormState('success')
-    }, 800)
+    } catch (err) {
+      console.error(err)
+      setErrorMessage('Network error. Please try again.')
+      setFormState('error')
+    }
   }
 
   const sharedFormProps = {
