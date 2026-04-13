@@ -177,30 +177,34 @@ export default function App() {
     setFormState('loading')
 
     try {
+      // Mimic a standard HTML form submission
+      const formData = new FormData()
+      formData.append('access_key', '68b80995-17e2-4112-96f4-52483806f3f7')
+      formData.append('name', name.trim())
+      formData.append('email', email.trim())
+      formData.append('subject', 'New Waitlist Signup')
+      // Web3Forms usually requires a message field or at least strongly expects it
+      formData.append('message', 'New user joined the waitlist.')
+
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          access_key: '68b80995-17e2-4112-96f4-52483806f3f7',
-          name: name.trim(),
-          email: email.trim(),
-          subject: 'New SkinProtocol Waitlist Signup',
-        }),
+        body: formData
       })
 
       const result = await response.json()
 
-      if (result.success) {
+      if (response.status === 200) {
         setFormState('success')
       } else {
+        console.error('Web3Forms Error:', result)
         setErrorMessage(result.message || 'Something went wrong. Please try again.')
         setFormState('error')
       }
     } catch (err) {
-      console.error(err)
+      console.error('Network Error:', err)
       setErrorMessage('Network error. Please try again.')
       setFormState('error')
     }
