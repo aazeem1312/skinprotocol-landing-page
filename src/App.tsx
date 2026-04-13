@@ -1,15 +1,8 @@
-import { useState } from 'react'
-import { useQuery, useMutation } from 'convex/react'
-import { api } from '../convex/_generated/api'
+import { useState, useEffect } from 'react'
+import { supabase } from './supabase'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type FormState = 'idle' | 'loading' | 'success' | 'duplicate' | 'error'
-
-interface MutationResult {
-  success: boolean
-  duplicate?: boolean
-  message?: string
-}
 
 interface SubmitPayload {
   name: string
@@ -30,7 +23,20 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // ─── Counter ──────────────────────────────────────────────────────────────────
 function Counter() {
-  const count = useQuery(api.waitlist.getCount)
+  const [count, setCount] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    async function fetchCount() {
+      const { count: exactCount } = await supabase
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true })
+      
+      if (exactCount !== null) {
+        setCount(exactCount)
+      }
+    }
+    fetchCount()
+  }, [])
 
   if (count === undefined) {
     return (
@@ -184,7 +190,6 @@ const Divider = () => <div className="border-t border-[#2A2A2A]" />
 export default function App() {
   const [formState, setFormState] = useState<FormState>('idle')
   const [errorMessage, setErrorMessage] = useState('')
-  const joinWaitlist = useMutation(api.waitlist.joinWaitlist)
 
   const handleInputFocus = () => {
     if (formState === 'error') setFormState('idle')
@@ -196,6 +201,7 @@ export default function App() {
       setFormState('error')
       return
     }
+    
     if (!email || !EMAIL_REGEX.test(email.trim())) {
       setErrorMessage('Please enter a valid email address.')
       setFormState('error')
@@ -205,21 +211,44 @@ export default function App() {
     setFormState('loading')
 
     try {
-      const result = (await joinWaitlist({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        source: SOURCE,
-      })) as MutationResult
+      const formattedEmail = email.trim().toLowerCase();
+      
+      // 1. Check for duplicates
+      const { data: existingUser } = await supabase
+        .from('waitlist')
+        .select('id')
+        .eq('email', formattedEmail)
+        .single()
 
-      if (result.success) {
-        setFormState('success')
-      } else if (result.duplicate) {
+      if (existingUser) {
         setFormState('duplicate')
-      } else {
-        setErrorMessage(result.message ?? 'Something went wrong. Please try again.')
-        setFormState('error')
+        return
       }
-    } catch {
+      
+      // We can ignore the case where searchError throws a PGRST116 (No rows found), 
+      // which is expected when the user doesn't exist.
+
+      // 2. Insert new user
+      const { error: insertError } = await supabase
+        .from('waitlist')
+        .insert([
+          { name: name.trim(), email: formattedEmail, source: SOURCE },
+        ])
+
+      if (insertError) {
+        if (insertError.code === '23505') { // Postgres unique violation code
+          setFormState('duplicate')
+        } else {
+          console.error(insertError)
+          setErrorMessage('Something went wrong. Please try again.')
+          setFormState('error')
+        }
+        return
+      }
+
+      setFormState('success')
+    } catch (err) {
+      console.error(err)
       setErrorMessage('Connection error. Please try again.')
       setFormState('error')
     }
