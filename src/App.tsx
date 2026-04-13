@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
-import { supabase } from './supabase'
+import { useState } from 'react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type FormState = 'idle' | 'loading' | 'success' | 'duplicate' | 'error'
+type FormState = 'idle' | 'loading' | 'success' | 'error'
 
 interface SubmitPayload {
   name: string
@@ -10,41 +9,11 @@ interface SubmitPayload {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-function getSource(): string {
-  try {
-    return new URLSearchParams(window.location.search).get('source') || 'direct'
-  } catch {
-    return 'direct'
-  }
-}
-
-const SOURCE = getSource()
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // ─── Counter ──────────────────────────────────────────────────────────────────
 function Counter() {
-  const [count, setCount] = useState<number | undefined>(undefined)
-
-  useEffect(() => {
-    async function fetchCount() {
-      const { count: exactCount } = await supabase
-        .from('waitlist')
-        .select('*', { count: 'exact', head: true })
-      
-      if (exactCount !== null) {
-        setCount(exactCount)
-      }
-    }
-    fetchCount()
-  }, [])
-
-  if (count === undefined) {
-    return (
-      <p className="text-[12px] text-[#888888] tracking-[0.05em] animate-counter-pulse">
-        — people already waiting
-      </p>
-    )
-  }
+  const count = 14242 // Hardcoded static counter
 
   return (
     <p className="text-[12px] text-[#888888] tracking-[0.05em]">
@@ -76,7 +45,7 @@ function WaitlistForm({
 }: WaitlistFormProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const isLocked = formState === 'success' || formState === 'duplicate'
+  const isLocked = formState === 'success'
   const isLoading = formState === 'loading'
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,7 +55,6 @@ function WaitlistForm({
 
   const btnLabel = () => {
     if (formState === 'success') return 'You are on the list ✓'
-    if (formState === 'duplicate') return 'Already registered'
     if (formState === 'loading') return 'Joining…'
     return 'Join the waitlist'
   }
@@ -95,8 +63,6 @@ function WaitlistForm({
     const base = 'w-full font-bold text-sm py-[14px] rounded-lg transition-all duration-200'
     if (formState === 'success')
       return `${base} bg-[#141414] text-[#4CAF50] border border-[#2A2A2A] cursor-not-allowed`
-    if (formState === 'duplicate')
-      return `${base} bg-[#141414] text-[#888888] border border-[#2A2A2A] cursor-not-allowed`
     if (formState === 'loading')
       return `${base} bg-[#F5F0E8] text-[#0A0A0A] opacity-60 cursor-not-allowed`
     return `${base} bg-[#F5F0E8] text-[#0A0A0A] hover:opacity-90 active:opacity-70 cursor-pointer`
@@ -210,48 +176,9 @@ export default function App() {
 
     setFormState('loading')
 
-    try {
-      const formattedEmail = email.trim().toLowerCase();
-      
-      // 1. Check for duplicates
-      const { data: existingUser } = await supabase
-        .from('waitlist')
-        .select('id')
-        .eq('email', formattedEmail)
-        .single()
-
-      if (existingUser) {
-        setFormState('duplicate')
-        return
-      }
-      
-      // We can ignore the case where searchError throws a PGRST116 (No rows found), 
-      // which is expected when the user doesn't exist.
-
-      // 2. Insert new user
-      const { error: insertError } = await supabase
-        .from('waitlist')
-        .insert([
-          { name: name.trim(), email: formattedEmail, source: SOURCE },
-        ])
-
-      if (insertError) {
-        if (insertError.code === '23505') { // Postgres unique violation code
-          setFormState('duplicate')
-        } else {
-          console.error(insertError)
-          setErrorMessage('Something went wrong. Please try again.')
-          setFormState('error')
-        }
-        return
-      }
-
-      setFormState('success')
-    } catch (err) {
-      console.error(err)
-      setErrorMessage('Connection error. Please try again.')
-      setFormState('error')
-    }
+    // Simulate network request (without a backend)
+    await new Promise(res => setTimeout(res, 1200))
+    setFormState('success')
   }
 
   const sharedFormProps = {
